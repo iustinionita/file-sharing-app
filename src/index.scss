@@ -1,0 +1,118 @@
+// @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+$silver: #e9e9f3;
+$lightblue: #9595b0;
+$darkblue: #2c2d46;
+$pink: #f6618c;
+
+$transition: all 0.3s linear;
+$box-shadow: 0px 0px 20px 0px rgba(200, 196, 202, 0.5);
+
+@mixin flex($justify, $align) {
+  display: flex;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  // font-family: "Montserrat", sans-serif;
+  font-family: 'Roboto', sans-serif;
+
+}
+
+.socket {
+  position: absolute;
+  top: 50%;
+  left: 25px;
+  width: calc(100% - 50px);
+  transform: translateY(-50%);
+  @include flex(center, center);
+  flex-direction: column;
+  h1 {
+    color: $darkblue;
+    font-weight: 500;
+    opacity: .8;
+  }
+  h3 {
+    color: $darkblue;
+    font-weight: 400;
+    opacity: .7;
+  }
+  .upload--box {
+    background-color: #e9e9f33b;
+    width: 100%;
+    max-width: 1000px;
+    max-height: 100%;
+    height: 400px;
+    margin-top: 30px;
+    border: 2px dashed $silver;
+    border-radius: 10px;
+    @include flex(center, center); //space-around
+    flex-direction: column;
+    gap: 20px;
+    transition: $transition;
+    &:hover {
+      border-color: #d0d0d6;
+      // cursor: pointer;
+    }
+    & > p {
+      font-weight: 600;
+      color: $darkblue;
+    }
+    i {
+      font-size: 3rem;
+      color: $pink;
+      margin-bottom: 20px;
+    }
+    #fileInput {
+      display: none;
+    }
+    .upload--box--code {
+      @include flex(center, center);
+      gap: 10px;
+      margin-bottom: 50px;
+      p {
+        color: #aeaeb4;
+        font-weight: 600;
+      }
+      input {
+        width: 140px;
+        background-color: transparent;
+        color: $pink;
+        text-align: center;
+        border: 0;
+        border-bottom: 1px solid $lightblue;
+        outline: none;
+        font-weight: 600;
+      }
+    }
+    #upload--box--selectBtn {
+      border: 0;
+      background-color: white;
+      padding: 12px 25px;
+      font-size: 1rem;
+      border: 1px solid $lightblue;
+      border-radius: 10px;
+      font-weight: 500;
+      color: #818191;
+      transition: $transition;
+      &:hover {
+        cursor: pointer;
+        border-color: $pink;
+        color: $pink;
+      }
+    }
+    small {
+      color: $lightblue;
+    }
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: .3;
+}
