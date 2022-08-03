@@ -6,6 +6,10 @@ function Socket() {
   const { socket, setStatus, status } = useContext(SocketContext);
   const fileInput = useRef();
   const customCode = useRef();
+  const selectBtn = useRef();
+  const maxFileSize = useRef();
+  const downloadLink = useRef();
+  const copyMessage = useRef();
   const [file, setFile] = useState();
   const [code, setCode] = useState(createCode(15));
 
@@ -40,7 +44,14 @@ function Socket() {
                 code: code,
               });
             } else {
-              alert("File is too big!");
+              maxFileSize.current.style.cssText = `
+              color: #f6618c;
+              transform: scale(1.05);
+              `;
+              setTimeout(() => {
+                maxFileSize.current.style.cssText = "";
+                fileInput.current.value = "";
+              }, 2000);
             }
           }}
         />
@@ -50,12 +61,26 @@ function Socket() {
           <input
             type="text"
             ref={customCode}
-            onChange={() => setCode(customCode.current.value)}
+            placeholder="Min. 10 characters"
+            maxLength="20"
+            onChange={() => {
+              setCode(customCode.current.value);
+              if (customCode.current.value.length < 10) {
+                selectBtn.current.classList.add("disabled");
+              } else {
+                selectBtn.current.classList.remove("disabled");
+              }
+            }}
             value={code}
           />
         </div>
 
-        <i className="fa-solid fa-layer-group"></i>
+        <i
+          className={`fa-solid fa-layer-group ${
+            status === "Pending" ? "pulse-animation" : ""
+          }`}
+        ></i>
+
         {file ? (
           <p>{file.name}</p>
         ) : (
@@ -64,16 +89,32 @@ function Socket() {
 
         <button
           id="upload--box--selectBtn"
+          ref={selectBtn}
           onClick={() => fileInput.current.click()}
           className={status === "Pending" ? "disabled" : ""}
         >
           Browse computer
         </button>
-        <small>Maximum file size is 50MB</small>
+        <small ref={maxFileSize}>Maximum file size is 50MB</small>
+        <div className="download--link">
+          {status === "Complete" ? (
+            <div>
+              <Link to={`/download/${code}`} ref={downloadLink}>{code}</Link>
+              <i className="fa-solid fa-copy" onClick={() => {
+                  navigator.clipboard.writeText(downloadLink.current.href);
+                  copyMessage.current.classList.add("slide-in-out");
+                  setTimeout(() => copyMessage.current.classList.remove("slide-in-out"), 2000)
+              }}></i>
+            </div>
+          ) : (
+            <p style={{pointerEvents: "none"}}>Your download link will appear here</p>
+          )}
+        </div>
       </div>
 
       <br />
-      {status === "Complete" && <Link to={`/download/${code}`}>Link</Link>}
+      {/* {status === "Complete" && <Link to={`/download/${code}`}>Link</Link>} */}
+      <p id="copyMessage" ref={copyMessage}>Copied Successfully</p>
     </div>
   );
 }
