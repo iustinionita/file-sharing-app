@@ -1,0 +1,84 @@
+@import "variables";
+
+.download {
+  margin: 0 25px;
+  text-align: center;
+  @include flex(center, center);
+  flex-direction: column;
+  h1,
+  h3 {
+    color: $darkblue;
+    opacity: 0.7;
+    font-weight: 500;
+  }
+  h3 {
+    font-weight: 400;
+  }
+
+  .download--files {
+    border: 1px solid green;
+    max-width: 600px;
+    width: 100%;
+    border-radius: 10px;
+    border: 0;
+    box-shadow: $box-shadow;
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: white;
+      background-image: linear-gradient(
+        to right,
+        #fb4a7d,
+        #fc5e8a,
+        #fc7096,
+        #fb81a2,
+        #fa90ae
+      );
+      padding: 15px;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+    .download--file {
+      width: 100%;
+      display: inline-block;
+      @include flex(flex-start, center);
+      gap: 20px;
+      padding: 20px;
+      transition: $transition;
+      &:last-of-type {
+        border-bottom-left-radius: 10px !important;
+        border-bottom-right-radius: 10px !important;
+      }
+      &:hover {
+        box-shadow: $box-shadow;
+      }
+      a {
+        display: inline-block;
+        text-decoration: none;
+        color: $darkblue;
+        opacity: 0.6;
+        font-weight: 300;
+        width: 100%;
+        text-align: left;
+        cursor: default;
+        pointer-events: none;
+      }
+      i {
+        font-size: 2rem;
+        color: $darkblue;
+        opacity: 0.8;
+      }
+      .fa-download {
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+      p#no--files {
+        width: 100%;
+        text-align: center;
+        color: $darkblue;
+        opacity: 0.6;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}

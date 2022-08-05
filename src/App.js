@@ -1,4 +1,5 @@
-import "./index.scss";
+import "./socket.scss";
+import "./download.scss";
 import Socket from "./Components/Socket";
 import Download from "./Components/Download";
 import { SocketProvider } from "./Components/SocketContext";
