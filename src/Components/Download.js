@@ -139,8 +139,8 @@ function Download() {
                   download
                 >
                   {file}
-                </a>
                 <i className="fa-solid fa-download"></i>
+                </a>
                 {/* <span>{file.slice(file.indexOf("."), file.length)}</span> */}
               </div>
             );

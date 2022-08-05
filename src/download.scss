@@ -52,6 +52,11 @@
       &:hover {
         box-shadow: $box-shadow;
       }
+      i {
+        font-size: 2rem;
+        color: $darkblue;
+        opacity: 0.8;
+      }
       a {
         display: inline-block;
         text-decoration: none;
@@ -62,15 +67,12 @@
         text-align: left;
         cursor: default;
         pointer-events: none;
-      }
-      i {
-        font-size: 2rem;
-        color: $darkblue;
-        opacity: 0.8;
-      }
-      .fa-download {
-        font-size: 1.2rem;
-        cursor: pointer;
+        @include flex(space-between, center);
+        .fa-download {
+          font-size: 1.2rem;
+          cursor: pointer;
+          pointer-events: all;
+        }
       }
       p#no--files {
         width: 100%;
