@@ -7,14 +7,22 @@ function Download() {
   const { code } = useParams();
   const [files, setFiles] = useState();
 
+  // socket.emit("getFiles", code);
+  // socket.on("file", (file) => {
+  //   if (file !== "404") {
+  //     setFiles(file);
+  //   }
+  // });
+
   useEffect(() => {
-    socket.emit("getFiles", code);
+    // socket.emit("getFiles", code);
+    socket.emit("getFilesByName", code)
     socket.on("file", (file) => {
       if (file !== "404") {
         setFiles(file);
       }
     });
-  }, []);
+  }, [code, socket]);
 
   function setIcon(fileType) {
     const text = [
@@ -125,10 +133,10 @@ function Download() {
       </h3>
       <div className="download--files">
         <h2>SHARED FILES</h2>
-        {files ?
+        {files ? (
           files.map((file) => {
             return (
-              <div className="download--file" key={files.indexOf(file)}>
+              <div className="download--file" key={Math.random() * 10}>
                 <i
                   className={`fa-solid ${setIcon(
                     file.slice(file.indexOf("."), file.length)
@@ -139,18 +147,20 @@ function Download() {
                   download
                 >
                   {file}
-                <i className="fa-solid fa-download"></i>
+                  <i className="fa-solid fa-download"></i>
                 </a>
-                {/* <span>{file.slice(file.indexOf("."), file.length)}</span> */}
               </div>
             );
           })
-        :
-        <div className="download--file">
-          <p id="no--files">NO FILES</p>
-        </div>
-        }
+        ) : (
+          <div className="download--file">
+            <p id="no--files">NO FILES</p>
+          </div>
+        )}
       </div>
+      {/* <button onClick={() => {
+        socket.emit("getFilesByName", code)
+      }}>test</button> */}
     </div>
   );
 }

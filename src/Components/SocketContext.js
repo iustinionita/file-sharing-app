@@ -5,12 +5,33 @@ const SocketContext = createContext();
 const socket = io("192.168.0.33:3000");
 
 export function SocketProvider({ children }) {
-    const [status, setStatus] = useState();
-    useEffect(() => {
-        socket.on("upload.status", (upStatus) => setStatus(upStatus));
-    }, []);
+
+    // const [code, setCode] = useState("");
+
+    // useEffect(() => {
+    //     const shareCode = sessionStorage.getItem("shareCode");
+    //     if (shareCode == null) {
+    //         const newCode = createCode(15);
+    //         setCode(newCode);
+    //         sessionStorage.setItem("shareCode", newCode);
+    //     } else {
+    //         setCode(shareCode);
+    //     }
+    // }, []);
+
+    // function createCode(length) {
+    //     var result = "";
+    //     var characters =
+    //         "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    //     var charactersLength = characters.length;
+    //     for (var i = 0; i < length; i++) {
+    //         result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    //     }
+    //     return result;
+    // }
+
     return (
-        <SocketContext.Provider value={{ socket, setStatus, status }}>
+        <SocketContext.Provider value={{ socket }}>
             {children}
         </SocketContext.Provider>
     )

@@ -3,14 +3,19 @@ import SocketContext from "./SocketContext";
 import { Link } from "react-router-dom";
 
 function Socket() {
-  const { socket, setStatus, status } = useContext(SocketContext);
+  const { socket } = useContext(SocketContext);
   const fileInput = useRef();
   const customCode = useRef();
   const selectBtn = useRef();
   const maxFileSize = useRef();
+  const maxFilesNumer = useRef();
   const downloadLink = useRef();
   const copyMessage = useRef();
-  const [file, setFile] = useState();
+  // const [file, setFile] = useState();
+  const [files, setFiles] = useState();
+  const [status, setStatus] = useState();
+  let [totalUploads, setTotalUploads] = useState(0);
+  let [totalErrors, setTotalErrors] = useState(0);
   const [code, setCode] = useState(createCode(15));
 
   function createCode(length) {
@@ -24,34 +29,60 @@ function Socket() {
     return result;
   }
 
+  socket.on("upload.status", (upStatus) => {
+    setStatus(upStatus);
+    if (upStatus === "Complete") {
+      setTotalUploads((totalUploads += 1));
+    } else if (upStatus === "Error") {
+      setTotalErrors((totalErrors += 1));
+    }
+  });
+
   return (
     <div className="socket">
-      <h1>Upload file</h1>
+      <h1>Upload files</h1>
       <h3>Please upload files you only have the right to share</h3>
 
       <div className="upload--box">
         <input
+          multiple
           type="file"
           id="fileInput"
           ref={fileInput}
           onChange={() => {
-            if (fileInput.current.files[0].size < 5e7) {
-              setStatus("Pending");
-              setFile(fileInput.current.files[0]);
-              socket.emit("upload", {
-                file: fileInput.current.files[0],
-                fileName: fileInput.current.files[0].name,
-                code: code,
-              });
-            } else {
-              maxFileSize.current.style.cssText = `
+            setTotalUploads(0);
+            setTotalErrors(0);
+            const files = fileInput.current.files;
+            setFiles(files);
+            if (files.length > 30) {
+              setFiles();
+              maxFilesNumer.current.style.cssText = `
               color: #f6618c;
               transform: scale(1.05);
               `;
               setTimeout(() => {
-                maxFileSize.current.style.cssText = "";
-                fileInput.current.value = "";
+                maxFilesNumer.current.style.cssText = "";
               }, 2000);
+              return;
+            }
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              if (file.size < 5e7) {
+                socket.emit("upload", {
+                  file: file,
+                  fileName: file.name,
+                  code: code,
+                });
+              } else {
+                setTotalErrors((totalErrors += 1));
+                maxFileSize.current.style.cssText = `
+              color: #f6618c;
+              transform: scale(1.05);
+              `;
+                setTimeout(() => {
+                  maxFileSize.current.style.cssText = "";
+                }, 2000);
+              }
             }
           }}
         />
@@ -63,28 +94,34 @@ function Socket() {
             ref={customCode}
             placeholder="Min. 10 characters"
             maxLength="20"
-            onChange={() => {
-              setCode(customCode.current.value);
-              if (customCode.current.value.length < 10) {
-                selectBtn.current.classList.add("disabled");
-              } else {
-                selectBtn.current.classList.remove("disabled");
-              }
-            }}
+            // onChange={() => {
+            //   setCode(customCode.current.value);
+            //   if (customCode.current.value.length < 10) {
+            //     selectBtn.current.classList.add("disabled");
+            //   } else {
+            //     selectBtn.current.classList.remove("disabled");
+            //   }
+            // }}
+            disabled
             value={code}
           />
         </div>
 
-        <i
-          className={`fa-solid fa-layer-group ${
-            status === "Pending" ? "pulse-animation" : ""
-          }`}
-        ></i>
+        <i className="fa-solid fa-layer-group"></i>
 
-        {file ? (
+        {/* {file ? (
           <p>{file.name}</p>
         ) : (
           <p style={{ color: "#E9E9F3" }}>Please select your fle to upload</p>
+        )} */}
+
+        {files ? (
+          <p>
+            {totalUploads} / {files.length} files have been uploaded.{" "}
+            {totalErrors > 0 && <span>Errors: {totalErrors}</span>}
+          </p>
+        ) : (
+          <p style={{ color: "#E9E9F3" }}>Please select your fles to upload</p>
         )}
 
         <button
@@ -95,28 +132,64 @@ function Socket() {
         >
           Browse computer
         </button>
+
         <small ref={maxFileSize}>Maximum file size is 50MB</small>
+        <small ref={maxFilesNumer}>30 maximum files per upload</small>
+
         <div className="download--link">
           {status === "Complete" ? (
             <div>
-              <Link to={`/download/${code}`} ref={downloadLink}>{code}</Link>
-              <i className="fa-solid fa-copy" onClick={() => {
+              <Link to={`/download/${code}`} ref={downloadLink}>
+                {/* {code} */}
+                Download Link
+              </Link>
+              <i
+                className="fa-solid fa-copy"
+                onClick={() => {
                   navigator.clipboard.writeText(downloadLink.current.href);
                   copyMessage.current.classList.add("slide-in-out");
-                  setTimeout(() => copyMessage.current.classList.remove("slide-in-out"), 2000)
-              }}></i>
+                  setTimeout(
+                    () => copyMessage.current.classList.remove("slide-in-out"),
+                    2000
+                  );
+                }}
+              ></i>
             </div>
           ) : (
-            <p style={{pointerEvents: "none"}}>Your download link will appear here</p>
+            <p style={{ pointerEvents: "none" }}>
+              Your download link will appear here
+            </p>
           )}
         </div>
       </div>
 
       <br />
-      {/* {status === "Complete" && <Link to={`/download/${code}`}>Link</Link>} */}
-      <p id="copyMessage" ref={copyMessage}>Copied Successfully</p>
+      <p id="copyMessage" ref={copyMessage}>
+        Copied Successfully
+      </p>
     </div>
   );
 }
 
 export default Socket;
+
+// onChange={() => {
+//   if (fileInput.current.files[0].size < 5e7) {
+//     setStatus("Pending");
+//     setFile(fileInput.current.files[0]);
+//     socket.emit("upload", {
+//       file: fileInput.current.files[0],
+//       fileName: fileInput.current.files[0].name,
+//       code: code,
+//     });
+//   } else {
+//     maxFileSize.current.style.cssText = `
+//     color: #f6618c;
+//     transform: scale(1.05);
+//     `;
+//     setTimeout(() => {
+//       maxFileSize.current.style.cssText = "";
+//       fileInput.current.value = "";
+//     }, 2000);
+//   }
+// }}
