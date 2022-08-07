@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 
 const SocketContext = createContext();
-const socket = io("192.168.0.33:3000");
+const socket = io("http://file-sharing.ddns.net:3000");
 
 export function SocketProvider({ children }) {
 

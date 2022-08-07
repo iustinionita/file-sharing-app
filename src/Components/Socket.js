@@ -14,6 +14,7 @@ function Socket() {
   // const [file, setFile] = useState();
   const [files, setFiles] = useState();
   const [status, setStatus] = useState();
+  let [totalFiles, setTotalFiles] = useState();
   let [totalUploads, setTotalUploads] = useState(0);
   let [totalErrors, setTotalErrors] = useState(0);
   const [code, setCode] = useState(createCode(15));
@@ -54,7 +55,9 @@ function Socket() {
             setTotalErrors(0);
             const files = fileInput.current.files;
             setFiles(files);
-            if (files.length > 30) {
+            setTotalFiles(files.length);
+            // setCode(createCode(15))
+            if (files.length > 10) {
               setFiles();
               maxFilesNumer.current.style.cssText = `
               color: #f6618c;
@@ -67,7 +70,7 @@ function Socket() {
             }
             for (let i = 0; i < files.length; i++) {
               const file = files[i];
-              if (file.size < 5e7) {
+              if (file.size < 1e+7) {
                 socket.emit("upload", {
                   file: file,
                   fileName: file.name,
@@ -128,16 +131,16 @@ function Socket() {
           id="upload--box--selectBtn"
           ref={selectBtn}
           onClick={() => fileInput.current.click()}
-          className={status === "Pending" ? "disabled" : ""}
+          className={(totalFiles > totalUploads + totalErrors) ? "disabled pulse-animation" : ""}
         >
-          Browse computer
+          {(totalFiles > totalUploads + totalErrors) ? "Uploading files ..." : "Browse computer"}
         </button>
 
-        <small ref={maxFileSize}>Maximum file size is 50MB</small>
-        <small ref={maxFilesNumer}>30 maximum files per upload</small>
+        <small ref={maxFileSize}>Maximum file size is 10MB</small>
+        <small ref={maxFilesNumer}>Maximum 10 files per upload</small>
 
         <div className="download--link">
-          {status === "Complete" ? (
+          {totalFiles === totalUploads + totalErrors ? (
             <div>
               <Link to={`/download/${code}`} ref={downloadLink}>
                 {/* {code} */}
