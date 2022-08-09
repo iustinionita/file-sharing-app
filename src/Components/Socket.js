@@ -145,7 +145,7 @@ function Socket() {
               <Link target={"_blank"} to={`/download/${code}`} ref={downloadLink}>
                 DOWNLOAD LINK
               </Link>
-              {/* <i
+              <i
                 className="fa-solid fa-copy"
                 onClick={() => {
                   navigator.clipboard
@@ -162,7 +162,7 @@ function Socket() {
                       console.log("Can't copy the link");
                     });
                 }}
-              ></i> */}
+              ></i>
             </div>
           ) : (
             <p style={{ pointerEvents: "none" }}>

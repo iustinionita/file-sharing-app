@@ -136,7 +136,7 @@ function Download() {
                   )}`}
                 ></i>
                 <a
-                  href={`http://file-sharing.ddns.net:3000/download/file/[${code}]${file}`}
+                  href={`https://file-sharing.ddns.net:3000/download/file/[${code}]${file}`}
                   download
                 >
                   <span>{file}</span>

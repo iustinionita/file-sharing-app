@@ -99,6 +99,7 @@
     small {
       color: $lightblue;
       transition: $transition;
+      text-align: center;
     }
     .download--link {
       width: 90%;
@@ -163,6 +164,59 @@
     to {
       // transform: scale(0.95);
       opacity: .5;
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .socket {
+    h1 {
+      font-size: 1.3rem;
+    }
+    h3 {
+      font-size: 0.9rem;
+    }
+    .upload--box {
+      .upload--box--code {
+        p {
+          font-size: .8rem;
+        }
+        input {
+          font-size: .7rem;
+        }
+      }
+      p {
+        font-size: .8rem;
+      }
+      small {
+        font-size: .7rem;
+      }
+      .download--link {
+        div {
+          a {
+            font-size: .8rem;
+          }
+          i {
+            font-size: .8rem;
+          }
+        }
+      }
+      #upload--box--selectBtn {
+        font-size: .8rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 300px) {
+  .socket {
+    .upload--box {
+      .upload--box--code {
+        display: none;
+      }
+      #upload--box--selectBtn {
+        font-size: .7rem;
+      }
     }
   }
 }
