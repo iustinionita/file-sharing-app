@@ -11,12 +11,13 @@ function Socket() {
   const maxFilesNumer = useRef();
   const downloadLink = useRef();
   const copyMessage = useRef();
-  // const [file, setFile] = useState();
   const [files, setFiles] = useState();
+  // eslint-disable-next-line
   const [status, setStatus] = useState();
   let [totalFiles, setTotalFiles] = useState();
   let [totalUploads, setTotalUploads] = useState(0);
   let [totalErrors, setTotalErrors] = useState(0);
+  // eslint-disable-next-line
   const [code, setCode] = useState(createCode(15));
 
   function createCode(length) {
@@ -56,7 +57,6 @@ function Socket() {
             const files = fileInput.current.files;
             setFiles(files);
             setTotalFiles(files.length);
-            // setCode(createCode(15))
             if (files.length > 10) {
               setFiles();
               maxFilesNumer.current.style.cssText = `
@@ -70,7 +70,7 @@ function Socket() {
             }
             for (let i = 0; i < files.length; i++) {
               const file = files[i];
-              if (file.size < 1e+7) {
+              if (file.size < 1e7) {
                 socket.emit("upload", {
                   file: file,
                   fileName: file.name,
@@ -112,12 +112,6 @@ function Socket() {
 
         <i className="fa-solid fa-layer-group"></i>
 
-        {/* {file ? (
-          <p>{file.name}</p>
-        ) : (
-          <p style={{ color: "#E9E9F3" }}>Please select your fle to upload</p>
-        )} */}
-
         {files ? (
           <p>
             {totalUploads} / {files.length} files have been uploaded.{" "}
@@ -131,9 +125,15 @@ function Socket() {
           id="upload--box--selectBtn"
           ref={selectBtn}
           onClick={() => fileInput.current.click()}
-          className={(totalFiles > totalUploads + totalErrors) ? "disabled pulse-animation" : ""}
+          className={
+            totalFiles > totalUploads + totalErrors
+              ? "disabled pulse-animation"
+              : ""
+          }
         >
-          {(totalFiles > totalUploads + totalErrors) ? "Uploading files ..." : "Browse computer"}
+          {totalFiles > totalUploads + totalErrors
+            ? "Uploading files ..."
+            : "Browse computer"}
         </button>
 
         <small ref={maxFileSize}>Maximum file size is 10MB</small>
@@ -142,21 +142,27 @@ function Socket() {
         <div className="download--link">
           {totalFiles === totalUploads + totalErrors ? (
             <div>
-              <Link to={`/download/${code}`} ref={downloadLink}>
-                {/* {code} */}
-                Download Link
+              <Link target={"_blank"} to={`/download/${code}`} ref={downloadLink}>
+                DOWNLOAD LINK
               </Link>
-              <i
+              {/* <i
                 className="fa-solid fa-copy"
                 onClick={() => {
-                  navigator.clipboard.writeText(downloadLink.current.href);
-                  copyMessage.current.classList.add("slide-in-out");
-                  setTimeout(
-                    () => copyMessage.current.classList.remove("slide-in-out"),
-                    2000
-                  );
+                  navigator.clipboard
+                    .writeText(downloadLink.current.href)
+                    .then(() => {
+                      copyMessage.current.classList.add("slide-in-out");
+                      setTimeout(
+                        () =>
+                          copyMessage.current.classList.remove("slide-in-out"),
+                        2000
+                      );
+                    })
+                    .catch(() => {
+                      console.log("Can't copy the link");
+                    });
                 }}
-              ></i>
+              ></i> */}
             </div>
           ) : (
             <p style={{ pointerEvents: "none" }}>
@@ -175,24 +181,3 @@ function Socket() {
 }
 
 export default Socket;
-
-// onChange={() => {
-//   if (fileInput.current.files[0].size < 5e7) {
-//     setStatus("Pending");
-//     setFile(fileInput.current.files[0]);
-//     socket.emit("upload", {
-//       file: fileInput.current.files[0],
-//       fileName: fileInput.current.files[0].name,
-//       code: code,
-//     });
-//   } else {
-//     maxFileSize.current.style.cssText = `
-//     color: #f6618c;
-//     transform: scale(1.05);
-//     `;
-//     setTimeout(() => {
-//       maxFileSize.current.style.cssText = "";
-//       fileInput.current.value = "";
-//     }, 2000);
-//   }
-// }}

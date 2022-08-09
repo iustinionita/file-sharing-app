@@ -7,16 +7,8 @@ function Download() {
   const { code } = useParams();
   const [files, setFiles] = useState();
 
-  // socket.emit("getFiles", code);
-  // socket.on("file", (file) => {
-  //   if (file !== "404") {
-  //     setFiles(file);
-  //   }
-  // });
-
   useEffect(() => {
-    // socket.emit("getFiles", code);
-    socket.emit("getFilesByName", code)
+    socket.emit("getFilesByName", code);
     socket.on("file", (file) => {
       if (file !== "404") {
         setFiles(file);
@@ -90,6 +82,7 @@ function Download() {
       ".psd",
       ".tga",
       ".tif",
+      ".ico",
     ];
     const vector = [".emf", ".ps", ".sketch", ".svg"];
     const layout = [".pdf", ".pub", ".qxp", ".xps"];
@@ -139,14 +132,14 @@ function Download() {
               <div className="download--file" key={Math.random() * 10}>
                 <i
                   className={`fa-solid ${setIcon(
-                    file.slice(file.indexOf("."), file.length)
+                    file.slice(file.lastIndexOf("."), file.length)
                   )}`}
                 ></i>
                 <a
                   href={`http://file-sharing.ddns.net:3000/download/file/[${code}]${file}`}
                   download
                 >
-                  {file}
+                  <span>{file}</span>
                   <i className="fa-solid fa-download"></i>
                 </a>
               </div>
@@ -158,9 +151,6 @@ function Download() {
           </div>
         )}
       </div>
-      {/* <button onClick={() => {
-        socket.emit("getFilesByName", code)
-      }}>test</button> */}
     </div>
   );
 }

@@ -53,7 +53,7 @@
       }
       &:hover {
         box-shadow: $box-shadow;
-        @media(hover: none) {
+        @media (hover: none) {
           box-shadow: none;
         }
       }
@@ -69,15 +69,28 @@
         opacity: 0.6;
         font-weight: 300;
         width: 100%;
+        overflow: hidden;
         text-align: left;
         cursor: default;
         pointer-events: none;
         @include flex(space-between, center);
+        span {
+          width: calc(100% - 20px);
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
         .fa-download {
           padding-left: 10px;
           font-size: 1.2rem;
           cursor: pointer;
           pointer-events: all;
+          transition: $transition;
+          &:hover {
+            @media (hover: hover) {
+              color: $pink;
+            }
+          }
         }
       }
       p#no--files {
@@ -86,6 +99,22 @@
         color: $darkblue;
         opacity: 0.6;
         font-size: 1.2rem;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .download {
+    h1 {
+      font-size: 1.3rem;
+    }
+    h3 {
+      font-size: 0.9rem;
+    }
+    .download--files {
+      h2 {
+        font-size: 1rem;
       }
     }
   }
