@@ -124,7 +124,12 @@ function Socket() {
         <button
           id="upload--box--selectBtn"
           ref={selectBtn}
-          onClick={() => fileInput.current.click()}
+          onClick={() => {
+            setFiles()
+            setTotalFiles()
+            setCode(createCode(15))
+            fileInput.current.click();
+          }}
           className={
             totalFiles > totalUploads + totalErrors
               ? "disabled pulse-animation"
